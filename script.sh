@@ -19,8 +19,13 @@ yaml_file="packages.yml"
 sudo apt update
 
 for package in $(yq e '.packages[]' "$yaml_file"); do
-	echo "Installing $package..."
-	sudo apt install -y "$package"
+	echo "Checking if its installed"
+	if dpkg -s "$package" >/dev/null 2>&1; then
+		echo "Already installed"
+	else
+		echo "Installing $package..."
+		sudo apt install -y "$package"
+	fi
 done
 
 echo "All packages have been installed successfully."
