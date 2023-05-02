@@ -10,17 +10,17 @@ fi
 
 echo "Checking if yq (a yaml parser) is installed"
 if command -v yq >/dev/null 2>&1; then
-	echo "Installing yq"
-	pip install yq
-else
 	echo "Yq is already installed"
+else
+	echo "Installing yq"
+	sudo snap install yq
 fi
 
 # Yaml file with packages to install
 yaml_file="packages.yml"
 
 # Make sure everything is up to date
-sudo apt update
+sudo snap refresh
 
 # Loop through and install each package
 for package in $(yq e '.packages[]' "$yaml_file"); do
@@ -29,7 +29,7 @@ for package in $(yq e '.packages[]' "$yaml_file"); do
 		echo "$package is already installed"
 	else
 		echo "Installing $package..."
-		sudo apt install -y "$package"
+		sudo snap install -y "$package"
 	fi
 done
 
